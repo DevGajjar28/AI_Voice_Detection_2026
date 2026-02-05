@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from typing import Optional
 import os
 import sys
+import traceback
 
 # Add current directory to path so we can import app modules
 sys.path.append(os.getcwd())
@@ -26,10 +27,13 @@ class VoiceResponse(BaseModel):
     confidenceScore: float
     explanation: str
 
-# Security
-API_KEY = "sk_test_123456789" # In production, use environment variable
+# Security: validate x-api-key header (use API_KEY env var on production e.g. Render)
+API_KEY = os.getenv("API_KEY", "sk_test_123456789")
 
-async def verify_api_key(x_api_key: str = Header(...)):
+async def verify_api_key(x_api_key: Optional[str] = Header(None, alias="x-api-key")):
+    """Reject requests without a valid API key. Returns 401 for missing or invalid key."""
+    if not x_api_key:
+        raise HTTPException(status_code=401, detail="Missing API Key. Provide x-api-key header.")
     if x_api_key != API_KEY:
         raise HTTPException(status_code=401, detail="Invalid API Key")
     return x_api_key
@@ -44,9 +48,11 @@ async def http_exception_handler(request: Request, exc: HTTPException):
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
+    err_msg = str(exc).strip() or f"{type(exc).__name__}"
+    print(f"Internal error: {err_msg}\n{traceback.format_exc()}")
     return JSONResponse(
         status_code=500,
-        content={"status": "error", "message": f"Internal Server Error: {str(exc)}"},
+        content={"status": "error", "message": f"Internal Server Error: {err_msg}"},
     )
 
 # Supported Languages Configuration
@@ -63,9 +69,17 @@ async def detect_voice(request: VoiceRequest, api_key: str = Depends(verify_api_
     if request.audioFormat.lower() != "mp3":
         raise HTTPException(status_code=400, detail="Invalid audio format. Only 'mp3' is supported.")
 
+    # Reject placeholder or invalid base64 early (e.g. "..." or empty)
+    b64 = request.audioBase64.strip()
+    if not b64 or "..." in b64:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid audioBase64: provide full base64-encoded audio (no placeholders like '...').",
+        )
+
     try:
         # Run inference
-        result = classifier.predict(request.audioBase64)
+        result = classifier.predict(b64)
         
         return VoiceResponse(
             status="success",

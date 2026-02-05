@@ -4,9 +4,10 @@ FROM python:3.12-slim
 # Set working directory
 WORKDIR /app
 
-# Install system dependencies required for audio processing (libsndfile for librosa/soundfile)
+# Install system dependencies: libsndfile for WAV, ffmpeg for MP3 (librosa/audioread)
 RUN apt-get update && apt-get install -y \
     libsndfile1 \
+    ffmpeg \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements first to leverage Docker cache
