@@ -1,0 +1,15 @@
+__pycache__
+*.pyc
+.git
+.gitignore
+.env
+venv/
+env/
+test_deployment.py
+create_dummy_wav.py
+run_server.bat
+*.md
+!README.md
+audio_samples/
+newAudioS/
+other docs/

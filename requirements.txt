@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+python-multipart
+librosa
+numpy
+tensorflow
+scipy
+soundfile
+pydantic
+requests
