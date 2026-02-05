@@ -58,6 +58,24 @@ async def global_exception_handler(request: Request, exc: Exception):
 # Supported Languages Configuration
 SUPPORTED_LANGUAGES = ["Tamil", "English", "Hindi", "Malayalam", "Telugu"]
 
+@app.get("/api/voice-detection")
+def voice_detection_info():
+    """GET: show usage when someone opens the URL in a browser. Use POST to analyze audio."""
+    return {
+        "message": "Voice Detection API — use POST to analyze audio",
+        "method": "POST",
+        "headers": {
+            "Content-Type": "application/json",
+            "x-api-key": "YOUR_API_KEY (e.g. sk_test_123456789)"
+        },
+        "body": {
+            "language": "One of: Tamil, English, Hindi, Malayalam, Telugu",
+            "audioFormat": "mp3",
+            "audioBase64": "Base64-encoded audio (no placeholders)"
+        },
+        "example_curl": "curl -X POST <this-url> -H \"Content-Type: application/json\" -H \"x-api-key: sk_test_123456789\" -d @payload.json"
+    }
+
 @app.post("/api/voice-detection", response_model=VoiceResponse)
 async def detect_voice(request: VoiceRequest, api_key: str = Depends(verify_api_key)):
     

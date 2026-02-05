@@ -1,1 +1,13 @@
-curl -X POST "https://your-app-name.onrender.com/api/voice-detection" -H "Content-Type: application/json" -H "x-api-key: sk_test_123456789" -d @payload.json
+# cURL examples for Voice Detection API (Windows)
+
+## Option A: Run from project folder (recommended)
+cd d:\Hackathon\Final\HCL-Voice-Detector
+curl.exe -X POST "https://ai-voice-detection-2026.onrender.com/api/voice-detection" -H "Content-Type: application/json" -H "x-api-key: sk_test_123456789" -d "@payload.json"
+
+## Option B: Use full path to payload (run from anywhere)
+curl.exe -X POST "https://ai-voice-detection-2026.onrender.com/api/voice-detection" -H "Content-Type: application/json" -H "x-api-key: sk_test_123456789" -d "@d:\Hackathon\Final\HCL-Voice-Detector\payload.json"
+
+## Option C: Use the batch/PowerShell scripts (run from anywhere)
+test_manual_curl.bat
+# or
+powershell -ExecutionPolicy Bypass -File test_live.ps1
