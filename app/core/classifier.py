@@ -14,6 +14,22 @@ class VoiceClassifier:
 
     def _load_model(self):
         if not os.path.exists(self.model_path):
+            # Debugging for deployment
+            print(f"DEBUG: Current working directory: {os.getcwd()}")
+            print(f"DEBUG: Model path expected: {self.model_path}")
+            
+            # Walk up the tree to find what exists
+            check_path = self.model_path
+            while len(check_path) > 4: # Stop at root roughly
+                check_path = os.path.dirname(check_path)
+                if os.path.exists(check_path):
+                    print(f"DEBUG: Listing of {check_path}:")
+                    try:
+                        print(os.listdir(check_path))
+                    except Exception as e:
+                        print(f"Error listing {check_path}: {e}")
+                    break
+            
             raise FileNotFoundError(f"Model not found at {self.model_path}")
         print(f"Loading model from {self.model_path}...")
         
@@ -111,5 +127,7 @@ class VoiceClassifier:
             raise e
 
 # Global instance
-MODEL_PATH = os.path.join(os.getcwd(), "deepfake-audio-detector", "model", "model-1.keras")
+# Use path relative to this file to be robust against CWD changes
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+MODEL_PATH = os.path.join(BASE_DIR, "deepfake-audio-detector", "model", "model-1.keras")
 classifier = VoiceClassifier(MODEL_PATH)
