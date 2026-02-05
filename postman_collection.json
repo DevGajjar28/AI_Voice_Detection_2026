@@ -1,0 +1,82 @@
+{
+	"info": {
+		"_postman_id": "hcl-voice-detector-collection",
+		"name": "HCL Voice Detector API",
+		"description": "Collection for testing the HCL Voice Detector API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Detect Voice (Production)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "x-api-key",
+						"value": "sk_test_123456789",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"language\": \"English\",\n    \"audioFormat\": \"mp3\",\n    \"audioBase64\": \"<PASTE_BASE64_AUDIO_HERE>\"\n}"
+				},
+				"url": {
+					"raw": "https://your-app-name.onrender.com/api/voice-detection",
+					"protocol": "https",
+					"host": [
+						"your-app-name",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"api",
+						"voice-detection"
+					]
+				},
+				"description": "Main endpoint for voice detection. Replace <PASTE_BASE64_AUDIO_HERE> with actual base64 string."
+			},
+			"response": []
+		},
+		{
+			"name": "Detect Voice (Localhost)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "x-api-key",
+						"value": "sk_test_123456789",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"language\": \"English\",\n    \"audioFormat\": \"mp3\",\n    \"audioBase64\": \"<PASTE_BASE64_AUDIO_HERE>\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/voice-detection",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"voice-detection"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
